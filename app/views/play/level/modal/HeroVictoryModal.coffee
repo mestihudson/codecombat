@@ -1,3 +1,4 @@
+require('app/styles/play/level/modal/hero-victory-modal.sass')
 ModalView = require 'views/core/ModalView'
 CreateAccountModal = require 'views/core/CreateAccountModal'
 template = require 'templates/play/level/modal/hero-victory-modal'
@@ -253,7 +254,7 @@ module.exports = class HeroVictoryModal extends ModalView
     panels = @$el.find('.achievement-panel')
     for panel in panels
       panel = $(panel)
-      continue unless panel.data('animate')
+      continue unless panel.data('animate')?
       @animatedPanels = @animatedPanels.add(panel)
       panel.delay(500)  # Waiting for victory header to show up and fall
       panel.queue(->
@@ -401,7 +402,7 @@ module.exports = class HeroVictoryModal extends ModalView
     # Preserve the supermodel as we navigate back to the ladder.
     viewArgs = [{supermodel: if @options.hasReceivedMemoryWarning then null else @supermodel}, @level.get('slug')]
     ladderURL = "/play/ladder/#{@level.get('slug') || @level.id}"
-    if leagueID = (@courseInstanceID or @getQueryVariable 'league')
+    if leagueID = (@courseInstanceID or utils.getQueryVariable 'league')
       leagueType = if @level.isType('course-ladder') then 'course' else 'clan'
       viewArgs.push leagueType
       viewArgs.push leagueID
@@ -467,7 +468,7 @@ module.exports = class HeroVictoryModal extends ModalView
         viewArgs.push @courseID
         viewArgs.push @courseInstanceID if @courseInstanceID
     else if @level.isType('course-ladder')
-      leagueID = @courseInstanceID or @getQueryVariable 'league'
+      leagueID = @courseInstanceID or utils.getQueryVariable 'league'
       nextLevelLink = "/play/ladder/#{@level.get('slug')}"
       nextLevelLink += "/course/#{leagueID}" if leagueID
       viewClass = 'views/ladder/LadderView'
